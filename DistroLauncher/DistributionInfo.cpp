@@ -9,21 +9,32 @@ bool DistributionInfo::CreateUser(std::wstring_view userName)
 {
     // Create the user account.
     DWORD exitCode;
-    std::wstring commandLine = L"/usr/sbin/adduser --quiet --gecos '' ";
+    std::wstring commandLine = L"/usr/sbin/useradd -m ";
     commandLine += userName;
     HRESULT hr = g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
     if ((FAILED(hr)) || (exitCode != 0)) {
         return false;
     }
 
+    // Set root password, so `su` can be performed
+    commandLine = L"/usr/sbin/passwd root";
+    hr = g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
+    if ((FAILED(hr)) || (exitCode != 0)) {
+        // Delete the user if password wasn't set
+        commandLine = L"/usr/sbin/userdel ";
+        commandLine += userName;
+        g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
+        return false;
+    }
+
     // Add the user account to any relevant groups.
-    commandLine = L"/usr/sbin/usermod -aG adm,cdrom,sudo,dip,plugdev ";
+    commandLine = L"/usr/sbin/usermod -aG adm,wheel,floppy,cdrom,tape ";
     commandLine += userName;
     hr = g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
     if ((FAILED(hr)) || (exitCode != 0)) {
 
         // Delete the user if the group add command failed.
-        commandLine = L"/usr/sbin/deluser ";
+        commandLine = L"/usr/sbin/userdel ";
         commandLine += userName;
         g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
         return false;
