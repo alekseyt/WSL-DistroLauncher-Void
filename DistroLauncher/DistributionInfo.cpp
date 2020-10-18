@@ -9,35 +9,25 @@ bool DistributionInfo::CreateUser(std::wstring_view userName)
 {
     // Create the user account.
     DWORD exitCode;
-    std::wstring commandLine = L"/usr/sbin/useradd -m ";
-    commandLine += userName;
-    HRESULT hr = g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
+    const std::wstring createUserCommandLine = L"/usr/sbin/useradd -m " + std::wstring(userName);
+    HRESULT hr = g_wslApi.WslLaunchInteractive(createUserCommandLine.c_str(), true, &exitCode);
     if ((FAILED(hr)) || (exitCode != 0)) {
         return false;
     }
 
-    // Set root password, so `su` can be performed
-    commandLine = L"/usr/sbin/passwd root";
-    hr = g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
-    if ((FAILED(hr)) || (exitCode != 0)) {
-        // Delete the user if password wasn't set
-        commandLine = L"/usr/sbin/userdel ";
-        commandLine += userName;
-        g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
-        return false;
-    }
+    const std::wstring postUserCommands[] = {
+        L"/usr/sbin/passwd root",
+        L"/usr/sbin/usermod -aG adm,wheel,floppy,cdrom,tape " + std::wstring(userName),
+    };
 
-    // Add the user account to any relevant groups.
-    commandLine = L"/usr/sbin/usermod -aG adm,wheel,floppy,cdrom,tape ";
-    commandLine += userName;
-    hr = g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
-    if ((FAILED(hr)) || (exitCode != 0)) {
-
-        // Delete the user if the group add command failed.
-        commandLine = L"/usr/sbin/userdel ";
-        commandLine += userName;
-        g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
-        return false;
+    for (const auto& postUserCommandLine : postUserCommands) {
+        hr = g_wslApi.WslLaunchInteractive(postUserCommandLine.c_str(), true, &exitCode);
+        if ((FAILED(hr)) || (exitCode != 0)) {
+            // Delete the user if any command failed
+            const std::wstring deleteUserCommandLine = L"/usr/sbin/userdel " + std::wstring(userName);
+            g_wslApi.WslLaunchInteractive(deleteUserCommandLine.c_str(), true, &exitCode);
+            return false;
+        }
     }
 
     return true;
