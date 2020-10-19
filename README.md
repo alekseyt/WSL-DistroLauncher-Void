@@ -1,3 +1,23 @@
+# What you need
+
+1. WSL2 enabled: https://docs.microsoft.com/en-us/windows/wsl/install-win10
+1. Developer mode activated, so applications from "other sources" can be installed.
+1. Read the section below about certificate. Self-signed certificate will do.
+
+# How to install
+
+1. Get Visual Studio 2019 Community Edition: https://visualstudio.microsoft.com/downloads/
+1. Download rootfs: https://voidlinux.org/download/#download-installable-base-live-images-and-rootfs-tarballs
+1. Rename rootfs to `install.tar.xz`.
+1. Repack rootfs as `tar.gz`, unpack tar and pack with gzip: `gzip install.tar`.
+1. Put `install.tar.gz` under `WSL-DistroLauncher-Void/x64/`.
+1. Open DistroLauncher.sln in Visual Studio. It will prompt you to install some additional stuff.
+1. Right click on solution -> Deploy Solution.
+1. Press Super -> type Void in search -> Void WSL.
+1. Enter username and password when prompted.
+
+Sudo is set for group `wheel`, created user is in `wheel`, so `sudo su` and enter your password.
+
 # WSL Distro Launcher Reference Implementation
 ## Introduction 
 This is the C++ reference implementation for a Windows Subsystem for Linux (WSL) distribution installer/launcher application. Every distro package must include a launcher app, which is responsible for completing installation & registration of your distro with WSL, and for launching new distro instances atop WSL.
