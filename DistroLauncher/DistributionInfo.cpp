@@ -16,8 +16,9 @@ bool DistributionInfo::CreateUser(std::wstring_view userName)
     }
 
     const std::wstring postUserCommands[] = {
-        L"/usr/sbin/passwd root",
+        L"/usr/sbin/passwd " + std::wstring(userName),
         L"/usr/sbin/usermod -aG adm,wheel,floppy,cdrom,tape " + std::wstring(userName),
+        LR"(echo "%wheel ALL=(ALL) ALL" >/etc/sudoers.d/wheel)",
     };
 
     for (const auto& postUserCommandLine : postUserCommands) {
