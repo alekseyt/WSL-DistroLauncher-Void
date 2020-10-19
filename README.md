@@ -1,10 +1,14 @@
-# What you need
+# What is this
+
+Void Linux in WSL: https://voidlinux.org/
+
+## What do you need
 
 1. WSL2 enabled: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 1. Developer mode activated, so applications from "other sources" can be installed.
-1. Read the section below about certificate. Self-signed certificate will do.
+1. Read section below about certificate. Self-signed certificate will do.
 
-# How to install
+## How to build and install
 
 1. Get Visual Studio 2019 Community Edition: https://visualstudio.microsoft.com/downloads/
 1. Download rootfs: https://voidlinux.org/download/#download-installable-base-live-images-and-rootfs-tarballs
@@ -12,8 +16,8 @@
 1. Rename rootfs to `install.tar.xz`.
 1. Repack rootfs as `tar.gz`, unpack tar and pack with gzip: `gzip install.tar`.
 1. Put `install.tar.gz` under `WSL-DistroLauncher-Void/x64/`.
-1. Open DistroLauncher.sln in Visual Studio. It will prompt you to install some additional stuff.
-1. Again, read the section about certificate: Choose Certificate -> Create -> Enter some publisher name, don't (or do) enter the password.
+1. Open `DistroLauncher.sln` in Visual Studio. It will prompt you to install some additional stuff.
+1. Again, read section about certificate (below): Choose Certificate -> Create -> Enter some publisher name, don't (or do) enter the password.
 1. Right click on solution -> Deploy Solution.
 1. Press Super -> type Void in search -> Void WSL.
 1. Enter username and password when prompted.
@@ -31,9 +35,13 @@ tl;dr
 
 Sudo is set for group `wheel`, created user is in `wheel`, so `sudo su` and enter your password.
 
-# TODO
+## Logo
 
-1. Icons
+Logo is in public domain:
+  * https://en.wikipedia.org/wiki/File:Void_Linux_logo.svg
+  * http://alpha.de.repo.voidlinux.org/logos/
+
+TODO: Icons under `Assets/`
 
 # WSL Distro Launcher Reference Implementation
 ## Introduction 
