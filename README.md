@@ -8,15 +8,32 @@
 
 1. Get Visual Studio 2019 Community Edition: https://visualstudio.microsoft.com/downloads/
 1. Download rootfs: https://voidlinux.org/download/#download-installable-base-live-images-and-rootfs-tarballs
+   e.g. `void-x86_64-ROOTFS-20191109.tar.xz`
 1. Rename rootfs to `install.tar.xz`.
 1. Repack rootfs as `tar.gz`, unpack tar and pack with gzip: `gzip install.tar`.
 1. Put `install.tar.gz` under `WSL-DistroLauncher-Void/x64/`.
 1. Open DistroLauncher.sln in Visual Studio. It will prompt you to install some additional stuff.
+1. Again, read the section about certificate: Choose Certificate -> Create -> Enter some publisher name, don't (or do) enter the password.
 1. Right click on solution -> Deploy Solution.
 1. Press Super -> type Void in search -> Void WSL.
 1. Enter username and password when prompted.
 
+## How your user is created
+
+See `DistroLauncher/DistributionInfo.cpp`.
+
+tl;dr
+
+1. `useradd <username>`
+1. `passwd <username>`
+1. `usermod <groups> <username>`
+1. `echo "%wheel ALL=(ALL) ALL" >/etc/sudoers.d/wheel`
+
 Sudo is set for group `wheel`, created user is in `wheel`, so `sudo su` and enter your password.
+
+# TODO
+
+1. Icons
 
 # WSL Distro Launcher Reference Implementation
 ## Introduction 
