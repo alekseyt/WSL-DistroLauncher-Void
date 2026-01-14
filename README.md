@@ -1,23 +1,28 @@
 # What is this
 
-Void Linux in WSL: https://voidlinux.org/
+Void Linux in WSL: <https://voidlinux.org>
+
+> This is somewhat outdated VS2019 UWP. While this might be ported to VS2022 or later,
+> if you don't need a UWP, there is a simpler and better way to create a Void Linux WSL
+> image with a shell script: <https://bitbucket.org/alekseyt/void-wsl>
 
 ## What do you need
 
-1. WSL2 enabled: https://docs.microsoft.com/en-us/windows/wsl/install-win10
+1. WSL2 enabled: <https://docs.microsoft.com/en-us/windows/wsl/install-win10>
 1. Developer mode activated, so applications from "other sources" can be installed.
 1. Read section below about certificate. Self-signed certificate will do.
 
 ## How to build and install
 
 1. Get Visual Studio 2019 Community Edition: https://visualstudio.microsoft.com/downloads/
-1. Download rootfs: https://voidlinux.org/download/#download-installable-base-live-images-and-rootfs-tarballs
+1. Download rootfs: <https://voidlinux.org/download/#download-installable-base-live-images-and-rootfs-tarballs>
    e.g. `void-x86_64-ROOTFS-20191109.tar.xz`
 1. Rename rootfs to `install.tar.xz`.
 1. Repack rootfs as `tar.gz`, unpack tar and pack with gzip: `gzip install.tar`.
 1. Put `install.tar.gz` under `WSL-DistroLauncher-Void/x64/`.
 1. Open `DistroLauncher.sln` in Visual Studio. It will prompt you to install some additional stuff.
-1. Again, read section about certificate (below): Choose Certificate -> Create -> Enter some publisher name, don't (or do) enter the password.
+1. Again, read section about certificate (below):
+   Choose Certificate -> Create -> Enter some publisher name, don't (or do) enter the password.
 1. Right click on solution -> Deploy Solution.
 1. Press Super -> type Void in search -> Void WSL.
 1. Enter username and password when prompted.
@@ -38,19 +43,19 @@ Sudo is set for group `wheel`, created user is in `wheel`, so `sudo su` and ente
 ## Logo
 
 Logo is in public domain:
-  * https://en.wikipedia.org/wiki/File:Void_Linux_logo.svg
-  * http://alpha.de.repo.voidlinux.org/logos/
+  * <https://en.wikipedia.org/wiki/File:Void_Linux_logo.svg>
+  * <http://alpha.de.repo.voidlinux.org/logos/>
 
 TODO: Icons under `Assets/`
 
 # WSL Distro Launcher Reference Implementation
-## Introduction 
+## Introduction
 This is the C++ reference implementation for a Windows Subsystem for Linux (WSL) distribution installer/launcher application. Every distro package must include a launcher app, which is responsible for completing installation & registration of your distro with WSL, and for launching new distro instances atop WSL.
 
 Once you've built your distro launcher, packaged it along with the required art assets, manifest, and distro.tar.gz, and digitally signed the package, you will be able to sideload your distro on your own machine(s).
-  
-## Important! 
-Before publishing your distro to the Windows Store, you must first reach-out to and get approval from the WSL team: wslpartners@microsoft.com. 
+
+## Important!
+Before publishing your distro to the Windows Store, you must first reach-out to and get approval from the WSL team: wslpartners@microsoft.com.
 
 Without testing and approval from the WSL team, distros submitted to the store will be rejected. This process is required in order to ensure the quality and integrity of the WSL distro ecosystem, and to safeguard our users.
 
@@ -92,7 +97,7 @@ This is the basic flow of how the launcher code is set up.
 3. Once the distro is configured, parse any other command-line arguments. The details of these arguments are described above, in the [Introduction](#Introduction).
 
 ## Project Structure
-The distro launcher is comprised of two Visual Studio projects - `launcher` and `DistroLauncher-Appx`. The `launcher` project builds the actual executable that is run when a user launches the app. The `DistroLauncher-Appx` builds the distro package with all the correctly scaled assets and other dependencies. Code changes will be built in the `launcher` project (under `DistroLauncher/`). Manifest changes are applied in the `DistroLauncher-Appx` project (under `DistroLauncher-Appx/`). 
+The distro launcher is comprised of two Visual Studio projects - `launcher` and `DistroLauncher-Appx`. The `launcher` project builds the actual executable that is run when a user launches the app. The `DistroLauncher-Appx` builds the distro package with all the correctly scaled assets and other dependencies. Code changes will be built in the `launcher` project (under `DistroLauncher/`). Manifest changes are applied in the `DistroLauncher-Appx` project (under `DistroLauncher-Appx/`).
 
 ## Getting Started
 1. Generate a test certificate:
@@ -140,13 +145,13 @@ You will need a Windows environment to test that your app installs and works as 
 
 > Note: If you are using Hyper-V you can use the new VM gallery to easily spin up a Windows instance.
 
-Also, to allow your locally built distro package to be manually side-loaded, ensure you've enabled Developer Mode in the Settings app (sideloading won't work without it). 
+Also, to allow your locally built distro package to be manually side-loaded, ensure you've enabled Developer Mode in the Settings app (sideloading won't work without it).
 
 ## Build and Test
 
-To help building and testing the DistroLauncher project, we've included several scripts to automate some tasks. You can either choose to use these scripts from the command line, or work directly in Visual Studio, whatever your preference is. 
+To help building and testing the DistroLauncher project, we've included several scripts to automate some tasks. You can either choose to use these scripts from the command line, or work directly in Visual Studio, whatever your preference is.
 
-> **Note**: some sideloading/deployment steps don't work if you mix and match Visual Studio and the command line for development. If you run into errors while trying to deploy your app after already deploying it once, the easiest step is usually just to uninstall the previously sideloaded version and try again. 
+> **Note**: some sideloading/deployment steps don't work if you mix and match Visual Studio and the command line for development. If you run into errors while trying to deploy your app after already deploying it once, the easiest step is usually just to uninstall the previously sideloaded version and try again.
 
 ### Building the Project (Command line):
 To compile the project, you can simply type `build` in the root of the project to use MSBuild to build the solution. This is useful for verifying that your application compiles. It will also build an appx for you to sideload on your dev machine for testing.
@@ -160,7 +165,7 @@ To compile the project, you can simply type `build` in the root of the project t
 
 If that's not the case, then you will need to modify that script.
 
-Once you've completed the build, the packaged appx should be placed in a directory like `WSL-DistroLauncher\x64\Release\DistroLauncher-Appx` and should be named something like `DistroLauncher-Appx_1.0.0.0_x64.appx`. Simply double click that appx file to open the sideloading dialog. 
+Once you've completed the build, the packaged appx should be placed in a directory like `WSL-DistroLauncher\x64\Release\DistroLauncher-Appx` and should be named something like `DistroLauncher-Appx_1.0.0.0_x64.appx`. Simply double click that appx file to open the sideloading dialog.
 
 You can also use the PowerShell cmdlet `Add-AppxPackage` to register your appx:
 ``` powershell
@@ -176,11 +181,11 @@ In order run your solution under the Visual Studio debugger, you will need to co
 ### Installing & Testing
 You should now have a finished appx sideloaded on your machine for testing.
 
-To install your distro package, double click on the signed appx and click "Install". Note that this only installs the appx on your system - it doesn't unzip the tar.gz or register the distro yet. 
+To install your distro package, double click on the signed appx and click "Install". Note that this only installs the appx on your system - it doesn't unzip the tar.gz or register the distro yet.
 
 You should now find your distro in the Start menu, and you can launch your distro by clicking its Start menu tile or executing your distro from the command line by entering its name into a Cmd/PowerShell Console.
 
-When you first run your newly installed distro, it is unpacked and registered with WSL. This can take a couple of minutes while all your distro files are unpacked and copied to your drive. 
+When you first run your newly installed distro, it is unpacked and registered with WSL. This can take a couple of minutes while all your distro files are unpacked and copied to your drive.
 
 Once complete, you should see a Console window with your distro running inside it.
 
@@ -191,7 +196,7 @@ If you are a distro vendor and want to publish  your distro to the Windows store
 1. Reach out to the WSL team to introduce your distro, yourself, and your team
 1. Agree with the WSL team on a testing and publishing plan
 1. Complete any required paperwork
-1. Sign up for an "Company" Windows Developer Account https://developer.microsoft.com/en-us/store/register. 
+1. Sign up for an "Company" Windows Developer Account https://developer.microsoft.com/en-us/store/register.
     > Note: This can take a week or more since you'll be required to confirm your organization's identity with an independent verification service via email and/or telephone.
 
 #### Publishing Code changes
@@ -206,7 +211,7 @@ You'll also need to change a few small things in your project to prepare your di
           ProcessorArchitecture="x64" />
 ```
 
-  > **NOTE**: Visual Studio can update this for you! You can do that by right-clicking on "DistroLauncher-Appx (Universal Windows)" in the solution explorer and clicking on "Store... Associate App with the Store..." and following the wizard. 
+  > **NOTE**: Visual Studio can update this for you! You can do that by right-clicking on "DistroLauncher-Appx (Universal Windows)" in the solution explorer and clicking on "Store... Associate App with the Store..." and following the wizard.
 
 2. You will either need to run `build rel` from the command line to generate the Release version of your appx or use Visual Studio directly to upload your package to the store. You can do this by right-clicking on "DistroLauncher-Appx (Universal Windows)" in the solution explorer and clicking on "Store... Create App Packages..." and following the wizard.
 
